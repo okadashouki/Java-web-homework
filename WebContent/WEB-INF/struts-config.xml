@@ -12,7 +12,7 @@
         <action path="/BackendAction" type="com.training.action.BackendAction" 
         		parameter="action" name="BackendActionform">
         		
-        		<forward name="queryGoods" path="/WEB-INF/Backend/VM_Backend_GoodsList.html" />
+        		<forward name="queryGoods" path="/WEB-INF/Backend/VM_Backend_GoodsList.jsp" />
         	<forward name="Backend" path="/BackendAction.do?action=queryGoods"  redirect="true"/>
         		
         		<forward name="updateGoods" path="/BackendAction.do?action=updateGoodsview" redirect="true"/>
@@ -34,7 +34,7 @@
         
         <action path="/Selectfrom" type="com.training.action.BackendAction" 
         		parameter="action" name="Selectfrom">
-        		<forward name="queryGoods" path="/WEB-INF/Backend/VM_Backend_GoodsList.html" />
+        		<forward name="queryGoods" path="/WEB-INF/Backend/VM_Backend_GoodsList.jsp" />
         		
            </action>
            
@@ -46,7 +46,7 @@
             <!-- 登入成功進入操作首頁 -->
             <forward name="success" path="/FrontendAction.do?action=VendingMachineview" redirect="true"/>
             <!-- 登入失敗重回登入頁面 -->
-            <forward name="fail" path="/BankLogin.html" redirect="true"/>
+            <forward name="fail" path="/Login.jsp"/>
         </action>
     </action-mappings>
 </struts-config>

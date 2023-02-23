@@ -23,7 +23,7 @@ public class LoginDao {
 	}
 
 	
-	public Account queryAccountById(String id){
+	public static Account queryAccountById(String id){
 		Account account = null;		
 		// querySQL SQL
 		String querySQL = "SELECT IDENTIFICATION_NO,CUSTOMER_NAME, PASSWORD FROM BEVERAGE_MEMBER WHERE IDENTIFICATION_NO =?";		

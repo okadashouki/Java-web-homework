@@ -11,6 +11,7 @@ public class Selectfrom extends ActionForm{
 	private String sort;
 	private String goodsQuantity;
 	private String status;
+	private int PageNo;
 	public String getGoodsID() {
 		return goodsID;
 	}
@@ -52,5 +53,11 @@ public class Selectfrom extends ActionForm{
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public int getPageNo() {
+		return PageNo;
+	}
+	public void setPageNo(int pageNo) {
+		PageNo = pageNo;
 	}
 }

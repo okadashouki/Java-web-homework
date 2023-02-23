@@ -44,7 +44,7 @@ public class BackendDao {
 				good.setGoodsQuantity(rs.getInt("Quantity"));
 				good.setGoodsImageName(rs.getString("Image_Name"));
 				good.setStatus(rs.getString("status"));
-				Goods.add(good);
+//				Goods.add(good);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -182,12 +182,13 @@ public class BackendDao {
 	}
 
 	
-	
-	public List<Goods> selectGoods(Select select) {
+	//下一步 找全部 karamade輸入0 兩個同時等於0就不輸入(等於全部商品)
+	public List<Goods> selectGoods(Select select, int made, int kara) {
 		List<Goods> Goods = new ArrayList<>();
 		StringBuffer sql = new StringBuffer();
 		ArrayList<Object> list= new ArrayList<Object>();
-		sql.append("SELECT * FROM BEVERAGE_GOODS WHERE GOODS_ID IS NOT NULL");
+		sql.append("SELECT * FROM(SELECT ROWNUM ROW_NUM, S.* FROM ");
+		sql.append(" (SELECT * FROM BEVERAGE_GOODS WHERE GOODS_ID IS NOT NULL");
 		
 		Connection conn = DBConnectionFactory.getOracleDBConnection();
 	
@@ -217,13 +218,21 @@ public class BackendDao {
 			list.add("%"+select.getGoodsName()+"%");
 			list.add("%"+select.getGoodsName()+"%");
 			}
-			if(select.getSort()!=null && Integer.parseInt(select.getSort())!=0){
+			if(select.getSort()!=null && !"0".equals(select.getSort())&&!"".equals(select.getSort())){
 				if(select.getSort().equals(1)){
 					sql.append(" ORDER BY PRICE ");
 				}else{
 					sql.append(" ORDER BY PRICE DESC");
 				}			
 			}
+			sql.append(")S)");
+			
+			if(made!=0 && kara!=0){
+			sql.append("WHERE ROW_NUM >= ? AND ROW_NUM < ?");
+			list.add(kara);
+			list.add(made);
+			}
+			
 			Object[]object=list.toArray();
 			PreparedStatement stmt =conn.prepareStatement(sql.toString());
 			
@@ -247,11 +256,6 @@ public class BackendDao {
 		
 			e.printStackTrace();
 		}
-		
-		
-		
-		
-		
 		return Goods;
 	}
 

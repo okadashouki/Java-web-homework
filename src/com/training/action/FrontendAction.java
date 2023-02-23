@@ -25,7 +25,7 @@ import com.training.model.Goods;
 import com.training.model.buygoodaction;
 import com.training.model.frontendAction;
 import com.training.service.FrontendServic;
-//測試網址 http://localhost:8085/JavaEE_Session4_Homework/BankLogin.html
+//測試網址 http://localhost:8085/JavaEE_Session4_Homework/Login.jsp
 
 
 public class FrontendAction extends DispatchAction{

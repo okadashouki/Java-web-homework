@@ -2,6 +2,7 @@ package com.training.action;
 
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +21,7 @@ import com.training.model.Goods;
 import com.training.model.SalesReport;
 import com.training.model.Select;
 import com.training.service.BackendService;
-//測試網址 http://localhost:8085/JavaEE_Session4_Homework/BankLogin.html
+//測試網址 http://localhost:8085/JavaEE_Session4_Homework/Login.jsp
 @MultipartConfig
 public class BackendAction extends DispatchAction{
 	
@@ -109,11 +110,22 @@ public class BackendAction extends DispatchAction{
 		 Selectfrom selectfrom = (Selectfrom) form;
 		 Select select = new Select();
 		 BeanUtils.copyProperties(select, selectfrom);
-		 List<String> datas = backendService.getselect(select);
-			System.out.println("---------------------------");
-			datas.stream().forEach(g -> System.out.println(g));
+		 int pageNo = select.getPageNo();
+		 List<Goods> datas = backendService.getselect(select);//所有商品
+		 List<Goods> data=  backendService.getselect(select,pageNo);//包含頁數商品
+		 Set<Integer>pagetotals = new TreeSet<>();
+		 request.setAttribute("data", data);
+		 Double pagelogic = Math.ceil((datas.size()/10.0));
+		 int pagetotal = pagelogic.intValue();
+		 for(int x=1;x<=pagetotal;x++){
+			 pagetotals.add(x);
+		 }
+		 request.setAttribute("pageNo", pageNo);
+		 request.setAttribute("pagetotals", pagetotals);
+//			System.out.println("---------------------------");
+//			datas.stream().forEach(g -> System.out.println(g));
 		 
-		 
+			
 		 return mapping.findForward("queryGoods");
 	 }
 	 

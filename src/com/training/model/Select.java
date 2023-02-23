@@ -8,6 +8,7 @@ public class Select {
 	private String sort; //排序
 	private String goodsQuantity;
 	private String status;
+	private int PageNo;
 	public String getGoodsID() {
 		return goodsID;
 	}
@@ -49,6 +50,12 @@ public class Select {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public int getPageNo() {
+		return PageNo;
+	}
+	public void setPageNo(int pageNo) {
+		PageNo = pageNo;
 	}
 	
 	
