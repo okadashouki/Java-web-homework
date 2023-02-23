@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN"
+          "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="BackendActionform" type="com.training.formbean.BackendActionform"/>
+         <form-bean name="FrontendActionform" type="com.training.formbean.FrontendActionform"/>
+         <form-bean name="Selectfrom" type="com.training.formbean.Selectfrom"/>
+    </form-beans>
+    <action-mappings>    
+        <action path="/BackendAction" type="com.training.action.BackendAction" 
+        		parameter="action" name="BackendActionform">
+        		
+        		<forward name="queryGoods" path="/WEB-INF/Backend/VM_Backend_GoodsList.html" />
+        	<forward name="Backend" path="/BackendAction.do?action=queryGoods"  redirect="true"/>
+        		
+        		<forward name="updateGoods" path="/BackendAction.do?action=updateGoodsview" redirect="true"/>
+        		<forward name="updateGoodsview" path="/WEB-INF/Backend/VM_Backend_GoodsReplenishment.html"/>
+        		
+        		<forward name="addGoods" path="/BackendAction.do?action=addGoodsview" redirect="true"/>
+     			<forward name="addGoodsview" path="/WEB-INF/Backend/VM_Backend_GoodsCreate.html"/>
+     			
+     			<forward name="querySalesReport" path="/BackendAction.do?action=querySalesReportview" redirect="true"/>
+     			<forward name="querySalesReportview" path="/WEB-INF/Backend/VM_Backend_GoodsSaleReport.html" />
+        </action>
+        <action path="/FrontendAction" type="com.training.action.FrontendAction" 
+        		parameter="action" name="FrontendActionform">
+        		<forward name="VendingMachine" path="/FrontendAction.do?action=VendingMachineview" redirect="true" />
+        		<forward name="VendingMachineview" path="/WEB-INF/Frontend/VendingMachineCart.html" />
+      			<forward name="clearCartGoods" path="/FrontendAction.do?action=clearCartGoods" redirect="true" />
+        		<forward name="searchgood" path="/WEB-INF/Frontend/VendingMachineCart.html" />
+        </action>
+        
+        <action path="/Selectfrom" type="com.training.action.BackendAction" 
+        		parameter="action" name="Selectfrom">
+        		<forward name="queryGoods" path="/WEB-INF/Backend/VM_Backend_GoodsList.html" />
+        		
+           </action>
+           
+           <action path="/MemberAction" type="com.training.action.MemberAction" 
+        		parameter="action" name="FrontendActionform">
+        		
+            </action>
+        <action path="/LoginAction" type="com.training.action.LoginAction" parameter="action">
+            <!-- 登入成功進入操作首頁 -->
+            <forward name="success" path="/FrontendAction.do?action=VendingMachineview" redirect="true"/>
+            <!-- 登入失敗重回登入頁面 -->
+            <forward name="fail" path="/BankLogin.html" redirect="true"/>
+        </action>
+    </action-mappings>
+</struts-config>
