@@ -89,7 +89,7 @@ public class FrontendAction extends DispatchAction{
 			for(Iterator<Goods> i = keys.iterator(); i.hasNext();){
 				Goods key = i.next();	
 				Integer value = carGoods.get(key);
-				Values.add(key.getGoodsID().toString());
+				Values.add((key.getGoodsID()));
 				buyQuantity.add(value.toString());
 			}	 
 		 boolean datas = frontendServic.buyGoods(Values, buyQuantity, //判斷是否購買成功
@@ -143,7 +143,7 @@ public class FrontendAction extends DispatchAction{
 	 public ActionForward addCartGoods(ActionMapping mapping, ActionForm form, 
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 	String goodsID = request.getParameter("goodsID");
-		 	int goodsiD = Integer.parseInt(goodsID);
+		 	String goodsiD = goodsID;
 			String buyQuantity = request.getParameter("buyQuantity");		
 			System.out.println("goodsID:" + goodsID);
 			System.out.println("buyQuantity:" + buyQuantity);
@@ -161,7 +161,7 @@ public class FrontendAction extends DispatchAction{
 				for(Iterator<Goods> i = keys.iterator(); i.hasNext();){
 					Goods key = i.next();	//要改變的商品
 					Integer value = carGoods.get(key);//要改變的商品原本數量
-				if(	goodsiD== key.getGoodsID().intValue()){
+				if(	goodsiD.equals(key.getGoodsID())){
 					flag = false; //如果有同樣商品，重新更新那個商品的購買數量
 					carGoods.put(key,value+ Integer.parseInt(buyQuantity));
 					}

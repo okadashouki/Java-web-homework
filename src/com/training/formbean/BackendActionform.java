@@ -5,17 +5,17 @@ import org.apache.struts.upload.FormFile;
 
 public class BackendActionform extends ActionForm{
 	
-	private long goodsID;
+	private String goodsID;
 	private String goodsName;
 	private int goodsPrice;
 	private int goodsQuantity;
 	private FormFile goodsImage;
 	private String status;
 	
-	public long getGoodsID() {
+	public String getGoodsID() {
 		return goodsID;
 	}
-	public void setGoodsID(long goodsID) {
+	public void setGoodsID(String goodsID) {
 		this.goodsID = goodsID;
 	}
 	public String getGoodsName() {

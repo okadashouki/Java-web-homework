@@ -1,7 +1,7 @@
 package com.training.model;
 import java.math.BigDecimal;
 public class Goods {
-	private BigDecimal goodsID;
+	private String goodsID;
 	private String goodsName;
 	private int goodsPrice;
 	private int goodsQuantity;
@@ -17,11 +17,11 @@ public class Goods {
 				+ ", status=" + status + "]";
 	}
 
-	public BigDecimal getGoodsID() {
+	public String getGoodsID() {
 		return goodsID;
 	}
 
-	public void setGoodsID(BigDecimal goodsID) {
+	public void setGoodsID(String goodsID) {
 		this.goodsID = goodsID;
 	}
 

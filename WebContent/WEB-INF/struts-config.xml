@@ -16,13 +16,13 @@
         	<forward name="Backend" path="/BackendAction.do?action=queryGoods"  redirect="true"/>
         		
         		<forward name="updateGoods" path="/BackendAction.do?action=updateGoodsview" redirect="true"/>
-        		<forward name="updateGoodsview" path="/WEB-INF/Backend/VM_Backend_GoodsReplenishment.html"/>
+        		<forward name="updateGoodsview" path="/WEB-INF/Backend/VM_Backend_GoodsReplenishment.jsp"/>
         		
         		<forward name="addGoods" path="/BackendAction.do?action=addGoodsview" redirect="true"/>
-     			<forward name="addGoodsview" path="/WEB-INF/Backend/VM_Backend_GoodsCreate.html"/>
+     			<forward name="addGoodsview" path="/WEB-INF/Backend/VM_Backend_GoodsCreate.jsp"/>
      			
      			<forward name="querySalesReport" path="/BackendAction.do?action=querySalesReportview" redirect="true"/>
-     			<forward name="querySalesReportview" path="/WEB-INF/Backend/VM_Backend_GoodsSaleReport.html" />
+     			<forward name="querySalesReportview" path="/WEB-INF/Backend/VM_Backend_GoodsSaleReport.jsp" />
         </action>
         <action path="/FrontendAction" type="com.training.action.FrontendAction" 
         		parameter="action" name="FrontendActionform">

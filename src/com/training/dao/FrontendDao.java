@@ -38,7 +38,7 @@ public class FrontendDao {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Goods good = new Goods();
-				good.setGoodsID(rs.getBigDecimal("goods_ID"));
+				good.setGoodsID(rs.getString("goods_ID"));
 				good.setGoodsName(rs.getString("goods_Name"));
 				good.setGoodsPrice(rs.getInt("Price"));
 				good.setGoodsQuantity(rs.getInt("Quantity"));
@@ -67,7 +67,7 @@ public class FrontendDao {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Goods good = new Goods();
-				good.setGoodsID(rs.getBigDecimal("goods_ID"));
+				good.setGoodsID(rs.getString("goods_ID"));
 				good.setGoodsName(rs.getString("goods_Name"));
 				good.setGoodsPrice(rs.getInt("Price"));
 				good.setGoodsQuantity(rs.getInt("Quantity"));
@@ -93,7 +93,7 @@ public class FrontendDao {
 				try (ResultSet rs = stmt.executeQuery()) {
 					while (rs.next()) {
 						Goods good = new Goods();
-						good.setGoodsID(rs.getBigDecimal("goods_ID"));
+						good.setGoodsID(rs.getString("goods_ID"));
 						good.setGoodsName(rs.getString("goods_Name"));
 						good.setGoodsPrice(rs.getInt("Price"));
 						good.setGoodsQuantity(rs.getInt("Quantity"));
@@ -128,7 +128,7 @@ public class FrontendDao {
 
 					pstmt.setTimestamp(1, new Timestamp(utilDate.getTime()));
 					pstmt.setString(2, customerID);
-					pstmt.setBigDecimal(3, key.getGoodsID());
+					pstmt.setString(3, key.getGoodsID());
 					pstmt.setInt(4, key.getGoodsPrice());
 					pstmt.setInt(5, value);
 					pstmt.addBatch();
@@ -170,7 +170,7 @@ public class FrontendDao {
 					stmt.setInt(3, good.getGoodsQuantity());
 					stmt.setString(4, good.getGoodsImageName());
 					stmt.setString(5, good.getStatus());
-					stmt.setBigDecimal(6, good.getGoodsID());
+					stmt.setString(6, good.getGoodsID());
 					stmt.addBatch();
 
 				}

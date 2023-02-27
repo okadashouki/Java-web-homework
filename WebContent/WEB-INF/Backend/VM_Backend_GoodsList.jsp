@@ -27,34 +27,35 @@
 	
 	<p>
 			商品編號
-			<input type="number" name="goodsID" size="5" value="0" min="0" max="1000"/>
+			<input type="number" name="goodsID" size="5" value="${select.goodsID}" min="0" max="1000"/>
 		</p>
 	<p>
 			商品名稱(不分大小寫)
-			<input type="text" name="goodsName" size="10"/>
+			<input type="text" name="goodsName" size="10" value="${select.goodsName}"/>
 		</p>
 	<p>
 			商品價格最低價
-			<input type="text" name="minPrice" size="5"  min="0" max="1000"/>
+			<input type="number" name="minPrice" size="5"  min="0" max="1000"value="${select.minPrice}"/>
 		</p>
 		<p>
 			商品價格最高價
-			<input type="text" name="maxPrice" size="5" min="0" max="1000"/>
+			<input type="number" name="maxPrice" size="5" min="0" max="1000"value="${select.maxPrice}"/>
 		</p>
 		
 		商品價格排序
 		<select name ="sort">
 		<option value="0">請選擇</option>
-		<option value="1">由最高至最低</option>
-		<option value="2">由最低至最高</option>
+		<option value="1">由最低至最高</option>
+		<option value="2">由最高至最低</option>
 		</select>
 	<p>
 			商品最低庫存數量
-			<input type="number" name="goodsQuantity" size="5" value="0" min="0" max="1000"/>
+			<input type="number" name="goodsQuantity" size="5" value="${select.goodsQuantity}" min="0" max="1000"/>
 		</p>
 		<p>
 			商品狀態：
 			<select name="status">
+				<option value="0">請選擇</option>
 				<option value="1">上架</option>
 				<option value="2">下架</option>				
 			</select>
@@ -97,29 +98,29 @@
    	<!-- 分頁 -->
    	<c:if test="${pagetotals.size()!=1}">
    	
-   	<c:if test="${pageNo>1}">
-	<h3 class="page"> <a href="Selectfrom.do?pageNo=${pageNo-1}&amp;action=Selectgood&amp;goodsID=&amp;goodsName=&amp;minPrice=&amp;
-		maxPrice=&amp;sort=&amp;goodsQuantity=&amp;status=&amp;"> 上一頁 </a> </h3>
+   	<c:if test="${select.pageNo>1}">
+	<h3 class="page"> <a href="Selectfrom.do?pageNo=${pageNo-1}&amp;action=Selectgood&amp;goodsID=${select.goodsID}&amp;goodsName=${select.goodsName}&amp;minPrice=${select.minPrice}&amp;
+		maxPrice=${select.maxPrice}&amp;sort=${select.sort}&amp;goodsQuantity=${select.goodsQuantity}&amp;status=${select.status}&amp;"> 上一頁 </a> </h3>
 	</c:if>
 	
 	<c:forEach items ="${pagetotals}" var="pagetotal">
 	<h3 class="page">
-		<a href="Selectfrom.do?pageNo=${pagetotal}&amp;action=Selectgood&amp;goodsID=&amp;goodsName=&amp;minPrice=&amp;
-		maxPrice=&amp;sort=&amp;goodsQuantity=&amp;status=&amp;" <c:if test="${pageNo == pagetotal}">style="color:red;"</c:if>>${pagetotal}</a> 
+		<a href="Selectfrom.do?pageNo=${pagetotal}&amp;action=Selectgood&amp;goodsID=${select.goodsID}&amp;goodsName=${select.goodsName}&amp;minPrice=${select.minPrice}&amp;
+		maxPrice=${select.maxPrice}&amp;sort=${select.sort}&amp;goodsQuantity=${select.goodsQuantity}&amp;status=${select.status}&amp;" <c:if test="${select.pageNo == pagetotal}">style="color:red;"</c:if>>${pagetotal}</a> 
 	</h3>
 	</c:forEach>
 	
 	
-	<c:if test="${pageNo != pagetotals.size() &&pagetotals.size()!=0}">
-	<h3 class="page"> <a href="Selectfrom.do?pageNo=${pageNo+1}&amp;action=Selectgood&amp;goodsID=&amp;goodsName=&amp;minPrice=&amp;
-		maxPrice=&amp;sort=&amp;goodsQuantity=&amp;status=&amp;"> 下一頁 </a> </h3>
+	<c:if test="${select.pageNo != pagetotals.size() &&pagetotals.size()!=0}">
+	<h3 class="page"> <a href="Selectfrom.do?pageNo=${select.pageNo+1}&amp;action=Selectgood&amp;goodsID=${select.goodsID}&amp;goodsName=${select.goodsName}&amp;minPrice=${select.minPrice}&amp;
+		maxPrice=${select.maxPrice}&amp;sort=${select.sort}&amp;goodsQuantity=${select.goodsQuantity}&amp;status=${select.status}&amp;"> 下一頁 </a> </h3>
 	</c:if>
 	
 
 	</c:if>
 	</td>	
 	</div>
-	<% request.removeAttribute("pageNo"); %>
+
 	<% request.removeAttribute("data"); %>
 </body>
 </html>

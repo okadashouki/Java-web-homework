@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,18 +28,18 @@ public class BackendDao {
 	
 		return backenddao;
 	}
-   //購物車找商品
-	public static Goods shohinsagasu(int goodsiD) {
+   //找單個商品
+	public static Goods shohinsagasu(String id) {
 //		List<Goods> Goods = new ArrayList<>();
 		Goods good = new Goods();
 		String querySQL = "SELECT * FROM BEVERAGE_GOODS WHERE goods_ID=?";
 		try(Connection conn = DBConnectionFactory.getOracleDBConnection();
 				PreparedStatement stmt = conn.prepareStatement(querySQL)){
-			stmt.setInt(1,goodsiD);
+			stmt.setString(1,id);
 				ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				
-				good.setGoodsID(rs.getBigDecimal("goods_ID"));
+				good.setGoodsID(rs.getString("goods_ID"));
 				good.setGoodsName(rs.getString("goods_Name"));
 				good.setGoodsPrice(rs.getInt("Price"));
 				good.setGoodsQuantity(rs.getInt("Quantity"));
@@ -67,7 +68,7 @@ public class BackendDao {
 				stmt.setInt(3, goods.getGoodsQuantity());
 				stmt.setString(4, goods.getGoodsImageName());
 				stmt.setString(5, goods.getStatus());
-				stmt.setBigDecimal(6, goods.getGoodsID());
+				stmt.setString(6, goods.getGoodsID());
 
 				updateCount = stmt.executeUpdate();
 				if(updateCount>0){
@@ -219,7 +220,7 @@ public class BackendDao {
 			list.add("%"+select.getGoodsName()+"%");
 			}
 			if(select.getSort()!=null && !"0".equals(select.getSort())&&!"".equals(select.getSort())){
-				if(select.getSort().equals(1)){
+				if(select.getSort().equals("1")){
 					sql.append(" ORDER BY PRICE ");
 				}else{
 					sql.append(" ORDER BY PRICE DESC");
@@ -243,7 +244,7 @@ public class BackendDao {
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				Goods good = new Goods();
-				good.setGoodsID(rs.getBigDecimal("goods_ID"));
+				good.setGoodsID(rs.getString("goods_ID"));
 				good.setGoodsName(rs.getString("goods_Name"));
 				good.setGoodsPrice(rs.getInt("Price"));
 				good.setGoodsQuantity(rs.getInt("Quantity"));
@@ -265,11 +266,11 @@ public class BackendDao {
 		String querySQL = "SELECT * FROM BEVERAGE_GOODS WHERE goods_ID=?";
 		try(Connection conn = DBConnectionFactory.getOracleDBConnection();
 				PreparedStatement stmt = conn.prepareStatement(querySQL)){
-			stmt.setInt(1,goods.getGoodsID().intValue());
+			stmt.setString(1,goods.getGoodsID());
 				ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				
-				good.setGoodsID(rs.getBigDecimal("goods_ID"));
+				good.setGoodsID(rs.getString("goods_ID"));
 				good.setGoodsName(rs.getString("goods_Name"));
 				good.setGoodsPrice(rs.getInt("Price"));
 				good.setGoodsQuantity(rs.getInt("Quantity"));
@@ -282,6 +283,29 @@ public class BackendDao {
 		}
 		return Goods;
 	
+	}
+
+	public List<Goods> AllGoods() {
+		List<Goods> Goods = new ArrayList<>();
+
+		String querySQL = "SELECT * FROM BEVERAGE_GOODS";
+		try(Connection conn = DBConnectionFactory.getOracleDBConnection();
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(querySQL)){
+			while (rs.next()) {
+				Goods good = new Goods();
+				good.setGoodsID(rs.getString("goods_ID"));
+				good.setGoodsName(rs.getString("goods_Name"));
+				good.setGoodsPrice(rs.getInt("Price"));
+				good.setGoodsQuantity(rs.getInt("Quantity"));
+				good.setGoodsImageName(rs.getString("Image_Name"));
+				good.setStatus(rs.getString("status"));
+				Goods.add(good);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return Goods;
 	}
 
 
