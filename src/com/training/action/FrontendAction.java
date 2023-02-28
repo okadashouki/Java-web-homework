@@ -1,5 +1,6 @@
 package com.training.action;
 
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,10 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.struts.action.ActionForm;
@@ -56,33 +61,70 @@ public class FrontendAction extends DispatchAction{
 		 
 		 return mapping.findForward("searchgood");
 	 }
-	
-	 
-	 public ActionForward VendingMachineview(ActionMapping mapping, ActionForm form, 
+	 public ActionForward VendingMachine(ActionMapping mapping, ActionForm form, 
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
-		 
+		 form=null;
+		 return mapping.findForward("VendingMachine");
+	 }
+	 //刷新商品頁面
+	 public ActionForward VendingMachineview(ActionMapping mapping, ActionForm form, //ok
+	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
+		 FrontendActionform frontendActionform = (FrontendActionform) form;
+		 frontendAction deta = new frontendAction();
+		 BeanUtils.copyProperties(deta, frontendActionform);;
+		 List<Goods> datas = frontendServic.getAllgood(deta);//取得全部商品資訊
+		 List<Goods> goods=frontendServic.getgood(deta);
+		 Set<Integer>pagetotals = new TreeSet<>();
+		 request.setAttribute("goods", goods); 
+		 Double pagelogic = Math.ceil((datas.size()/6.0));
+		 int pagetotal = pagelogic.intValue();
+		 Set<Integer>pages = new TreeSet<>();
+		 for(int x=1;x<=pagetotal;x++){//[1,2,3]
+			 pagetotals.add(x);
+		 }
+		 //為了只顯示3筆頁數
+		 for(Integer p: pagetotals){
+			 if(deta.getPageNo()==1){
+				 for(int x=1;x<=3;x++)
+				 pages.add(x);
+			 }else if(pagetotal == deta.getPageNo()){
+				 for(int x=pagetotal-2;x<=pagetotal;x++){
+					 pages.add(x);
+				 }
+		 }else if(p == deta.getPageNo()){
+			 for(int x=p;x<p+3;x++){
+				 if(p<pagetotal){
+					 pages.add(x-1); 
+				 	}
+			 	}
+		 	}
+		 }
+		
+		 request.setAttribute("deta", deta);//把搜尋條件補回前端頁面
+		 request.setAttribute("pagetotals", pagetotals);//總頁數
+		 request.setAttribute("pages", pages);//只顯示3筆頁數
 		 return mapping.findForward("VendingMachineview");
 	 }
 	 
 	 
 	 
-	 public ActionForward buyGoods(ActionMapping mapping, ActionForm form, 
+	 public ActionForward buyGoods(ActionMapping mapping, ActionForm form, //ok
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 FrontendActionform frontendActionform = (FrontendActionform) form;
 		 buygoodaction buygood = new buygoodaction();
 		 BeanUtils.copyProperties(buygood, frontendActionform);
 		 HttpServletRequest httpRequest = (HttpServletRequest)request;		
 			HttpSession session = httpRequest.getSession();
-//		 HttpSession session = request.getSession();
 			Account account = (Account) session.getAttribute("account");
 
 		 List<String> buyQuantity =  new ArrayList();
 		 List<String>Values= new ArrayList();
-	
+		ArrayList buyGoodsMsg = new ArrayList();
 		 Map<Goods, Integer>  carGoods= (Map<Goods, Integer>) session.getAttribute("carGoods");
 		 if(carGoods==null){
-			 System.out.println("購物車是空的，請選擇商品");
-			 return mapping.findForward("searchgood");
+			 buyGoodsMsg.add("購物車是空的，請選擇商品");
+			 session.setAttribute("buyGoodsMsg", buyGoodsMsg);
+			 return mapping.findForward("VendingMachine");
 		 }
 		 
 		 Set<Goods> keys = carGoods.keySet();
@@ -92,32 +134,38 @@ public class FrontendAction extends DispatchAction{
 				Values.add((key.getGoodsID()));
 				buyQuantity.add(value.toString());
 			}	 
-		 boolean datas = frontendServic.buyGoods(Values, buyQuantity, //判斷是否購買成功
+			int goodstotal = frontendServic.buyGoods(Values, buyQuantity, //算出總金額
 				 buygood.getInputMoney());
-		 if (datas == false) {
-				int goodstotal = frontendServic.goodstotal(Values, buyQuantity,
-						buygood.getInputMoney());
-				System.out.println("投入金額:" + buygood.getInputMoney());
-				System.out.println("購買金額:" + goodstotal);
-				System.out.println("找零金額:" + buygood.getInputMoney());
-				System.out.println("--------購買失敗--------");
+		 boolean buyGood = false;
+		 if (buygood.getInputMoney() < goodstotal) {//判斷是否購買成功
+				buyGood = false;
+			
+			} else {
+				buyGood = true;		
+			}
+		 if (buyGood == false) {
+
+				buyGoodsMsg.add("投入金額:" + buygood.getInputMoney());
+				buyGoodsMsg.add("購買金額:" + goodstotal+"\r\n");
+				buyGoodsMsg.add("找零金額:" + buygood.getInputMoney());
+				buyGoodsMsg.add("----購買失敗----");
 			} else {
 				int x = buygood.getInputMoney();
 				//key商品 vaule購買數量
 				Map<Goods, Integer> kazu = frontendServic.kazu(Values, buyQuantity, //判斷商品庫存並塞入Map
 						buygood.getInputMoney());
 
-				int goodstotal = frontendServic.goodstotal2(kazu);
+				int railgoodstotal = frontendServic.goodstotal2(kazu);
 				Set<Goods> keys2 = kazu.keySet();
-				System.out.println("投入金額:" + x);
-				System.out.println("購買金額:" + goodstotal);
-				System.out.println("找零金額:" + (x - goodstotal));
+				buyGoodsMsg.add("投入金額:" + x);
+				buyGoodsMsg.add("購買金額:" + railgoodstotal);
+				buyGoodsMsg.add("找零金額:" + (x - railgoodstotal));
 				for (Iterator<Goods> i = keys2.iterator(); i.hasNext();) {
 					Goods key = i.next();
 					Integer value = kazu.get(key);
 					if (value != 0) {
-						System.out.println("商品名稱:" + key.getGoodsName() + " "
-								+ "商品金額:" + key.getGoodsPrice() + " " + "購買數量:"
+						buyGoodsMsg.add("商品名稱:" + key.getGoodsName() +" "
+								+ "商品金額:" + key.getGoodsPrice() +" " + "購買數量:"
 								+ value);
 					}
 				}
@@ -133,22 +181,26 @@ public class FrontendAction extends DispatchAction{
 				}
 				boolean updateSuccess = frontendServic //更新資料庫
 						.UpdateGoodsQuantity(kazu);
-				return mapping.findForward("clearCartGoods");
+				 session.setAttribute("buyGoodsMsg", buyGoodsMsg);
+				 session.removeAttribute("carGoods");
+				return mapping.findForward("VendingMachine");
 			}
-		 return mapping.findForward("searchgood");
+		 session.setAttribute("buyGoodsMsg", buyGoodsMsg);
+		 return mapping.findForward("VendingMachine");
 	 }
-//		Map<Goods, Integer> carGoods = new LinkedHashMap<>();
-		
 		
 	 public ActionForward addCartGoods(ActionMapping mapping, ActionForm form, 
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 	String goodsID = request.getParameter("goodsID");
 		 	String goodsiD = goodsID;
-			String buyQuantity = request.getParameter("buyQuantity");		
-			System.out.println("goodsID:" + goodsID);
-			System.out.println("buyQuantity:" + buyQuantity);
+			String buyQuantity = request.getParameter("buyQuantity");	
+			JSONArray cartMsg = new JSONArray();
+			if(!"".equals(buyQuantity)&&Integer.parseInt(buyQuantity)>0){
+				cartMsg.add("goodsID:" + goodsID);
+				cartMsg.add("buyQuantity:" + buyQuantity);
 			Goods goods =  BackendDao.shohinsagasu(goodsiD);
 			HttpSession session = request.getSession();
+			
 			//先取得購物車
 			Map<Goods, Integer>  carGoods= (Map<Goods, Integer>) session.getAttribute("carGoods");
 			boolean flag = true;
@@ -171,7 +223,16 @@ public class FrontendAction extends DispatchAction{
 				carGoods.put(goods, Integer.parseInt(buyQuantity));
 			}
 			session.setAttribute("carGoods" , carGoods); //更新購物車
-		 return mapping.findForward("searchgood");
+			}else{
+				cartMsg.add("請輸入數量");
+			}
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			out.println(cartMsg);
+			out.flush();
+			out.close();
+		 return null;
 	 }
 	 
 	 
@@ -179,25 +240,31 @@ public class FrontendAction extends DispatchAction{
 	 public ActionForward queryCartGoods(ActionMapping mapping, ActionForm form, 
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 HttpSession session = request.getSession();
+		 JSONArray cartMsg = new JSONArray();
 		 Map<Goods, Integer>  carGoods= (Map<Goods, Integer>) session.getAttribute("carGoods");
 		 int total = 0;
 		 if(carGoods==null){
-			 System.out.println("目前購物車沒有商品，快去購物吧~");
+			 cartMsg.add("目前購物車沒有商品，快去購物吧~");
 		 }else{
 			 Set<Goods> keys = carGoods.keySet();
-			 System.out.println("目前購物車商品:");
+			 cartMsg.add("目前購物車商品:");
 				for(Iterator<Goods> i = keys.iterator(); i.hasNext();){
 					Goods key = i.next();	
 					Integer value = carGoods.get(key);
-			 System.out.println("商品名稱:"+key.getGoodsName());
-			 System.out.println("商品數量:"+value);
+					cartMsg.add("商品名稱:"+key.getGoodsName());
+					cartMsg.add("商品數量:"+value);
 			 int price = key.getGoodsPrice()*value;
 			 total+=price;
 				}
 		 }
-			 System.out.println("總金額:"+total);		
-				
-		 return mapping.findForward("searchgood");
+		 cartMsg.add("總金額:"+total);		
+		 response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			out.println(cartMsg);
+			out.flush();
+			out.close();
+		 return null;
 	 }
 	 
 	 
@@ -205,9 +272,15 @@ public class FrontendAction extends DispatchAction{
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 HttpSession session = request.getSession();
 		 Map<Goods, Integer>  carGoods= (Map<Goods, Integer>) session.getAttribute("carGoods");
-		 
+		 JSONArray cartMsg = new JSONArray();
 		 session.removeAttribute("carGoods");
-		 System.out.println("已清除購物車");
+		 cartMsg.add("已清除購物車");
+		 response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			out.println(cartMsg);
+			out.flush();
+			out.close();
 		 return mapping.findForward("VendingMachine");
 	 }
 	 

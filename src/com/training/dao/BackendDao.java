@@ -30,7 +30,6 @@ public class BackendDao {
 	}
    //找單個商品
 	public static Goods shohinsagasu(String id) {
-//		List<Goods> Goods = new ArrayList<>();
 		Goods good = new Goods();
 		String querySQL = "SELECT * FROM BEVERAGE_GOODS WHERE goods_ID=?";
 		try(Connection conn = DBConnectionFactory.getOracleDBConnection();
@@ -45,7 +44,6 @@ public class BackendDao {
 				good.setGoodsQuantity(rs.getInt("Quantity"));
 				good.setGoodsImageName(rs.getString("Image_Name"));
 				good.setStatus(rs.getString("status"));
-//				Goods.add(good);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -260,30 +258,6 @@ public class BackendDao {
 		return Goods;
 	}
 
-	public List<Goods> shohinsagasu(Goods goods) {
-		List<Goods> Goods = new ArrayList<>();
-		Goods good = new Goods();
-		String querySQL = "SELECT * FROM BEVERAGE_GOODS WHERE goods_ID=?";
-		try(Connection conn = DBConnectionFactory.getOracleDBConnection();
-				PreparedStatement stmt = conn.prepareStatement(querySQL)){
-			stmt.setString(1,goods.getGoodsID());
-				ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				
-				good.setGoodsID(rs.getString("goods_ID"));
-				good.setGoodsName(rs.getString("goods_Name"));
-				good.setGoodsPrice(rs.getInt("Price"));
-				good.setGoodsQuantity(rs.getInt("Quantity"));
-				good.setGoodsImageName(rs.getString("Image_Name"));
-				good.setStatus(rs.getString("status"));
-				Goods.add(good);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return Goods;
-	
-	}
 
 	public List<Goods> AllGoods() {
 		List<Goods> Goods = new ArrayList<>();
@@ -307,8 +281,4 @@ public class BackendDao {
 		}
 		return Goods;
 	}
-
-
-
-	
 }

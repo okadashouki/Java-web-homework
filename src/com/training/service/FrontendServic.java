@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import com.training.dao.FrontendDao;
 import com.training.model.Goods;
+import com.training.model.frontendAction;
 
 
 
@@ -44,9 +45,8 @@ public class FrontendServic {
 		return oracleDatas;
 	}
 
-	public boolean buyGoods(List<String> values, List<String> buyQuantity,
+	public int buyGoods(List<String> values, List<String> buyQuantity,//ok
 			int inputMoney) {
-		boolean buyGood = false;
 		int total = 0;
 		for (int x = 0; x < values.size(); x++) {
 			if (Integer.parseInt(buyQuantity.get(x)) != 0) {//如果購買數量不為0,取得商品地圖
@@ -63,32 +63,7 @@ public class FrontendServic {
 				}
 			}
 		}
-		if (inputMoney < total) {
-			buyGood = false;
 		
-		} else {
-			buyGood = true;		
-		}
-		return buyGood;
-	}
-
-	public int goodstotal(List<String> values, List<String> buyQuantity, int inputMoney) {
-		int total = 0;
-		for (int x = 0; x < values.size(); x++) {
-			if (Integer.parseInt(buyQuantity.get(x)) != 0) {
-				Set<BigDecimal> goodsIDs = new HashSet<>();
-				goodsIDs.add(new BigDecimal(values.get(x)));
-				Map<BigDecimal, Goods> buyGoods = FrontDao
-						.queryBuyGoods(goodsIDs);
-				Set<BigDecimal> keys = buyGoods.keySet();
-				for (Iterator<BigDecimal> i = keys.iterator(); i.hasNext();) {
-					BigDecimal key = i.next();
-					Goods value = buyGoods.get(key);
-					total += Integer.parseInt(buyQuantity.get(x))
-							* value.getGoodsPrice();
-				}
-			}
-		}
 		return total;
 	}
 
@@ -99,8 +74,7 @@ public class FrontendServic {
 			if (Integer.parseInt(buyQuantity.get(x)) != 0) {
 				Set<BigDecimal> goodsIDs = new HashSet<>();
 				goodsIDs.add(new BigDecimal(values.get(x)));
-				Map<BigDecimal, Goods> buyGoods = FrontDao
-						.queryBuyGoods(goodsIDs);
+				Map<BigDecimal, Goods> buyGoods = FrontDao.queryBuyGoods(goodsIDs);
 				Set<BigDecimal> keys = buyGoods.keySet();
 				for (Iterator<BigDecimal> i = keys.iterator(); i.hasNext();) {
 					BigDecimal key = i.next();
@@ -151,6 +125,22 @@ public class FrontendServic {
 	public static boolean UpdateGoodsQuantity(Map<Goods, Integer> kazu) {
 		boolean updateSuccess = FrontDao.batchUpdateGoodsQuantity(kazu.keySet().stream().collect(Collectors.toSet()));		
 		return updateSuccess;
+	}
+
+	public List<Goods> getAllgood(frontendAction deta) {
+		List<Goods> oracleDatas = FrontDao.selectGoods(deta,0,0);
+		return oracleDatas;
+	}
+
+	public List<Goods> getgood(frontendAction deta) {
+		int x = deta.getPageNo();
+		if(x==0){
+			x=1;
+		}
+		int made = x * 6 + 1;
+		int kara = made - 6;
+		List<Goods> oracleDatas =FrontDao.selectGoods(deta,made,kara);
+		return oracleDatas;
 	}
 	
 

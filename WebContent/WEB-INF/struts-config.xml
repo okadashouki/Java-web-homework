@@ -27,9 +27,9 @@
         <action path="/FrontendAction" type="com.training.action.FrontendAction" 
         		parameter="action" name="FrontendActionform">
         		<forward name="VendingMachine" path="/FrontendAction.do?action=VendingMachineview" redirect="true" />
-        		<forward name="VendingMachineview" path="/WEB-INF/Frontend/VendingMachineCart.html" />
+        		<forward name="VendingMachineview" path="/WEB-INF/Frontend/VendingMachineCart.jsp" />
       			<forward name="clearCartGoods" path="/FrontendAction.do?action=clearCartGoods" redirect="true" />
-        		<forward name="searchgood" path="/WEB-INF/Frontend/VendingMachineCart.html" />
+        		<forward name="searchgood" path="/WEB-INF/Frontend/VendingMachineCart.jsp" />
         </action>
         
         <action path="/Selectfrom" type="com.training.action.BackendAction" 
@@ -44,7 +44,7 @@
             </action>
         <action path="/LoginAction" type="com.training.action.LoginAction" parameter="action">
             <!-- 登入成功進入操作首頁 -->
-            <forward name="success" path="/FrontendAction.do?action=VendingMachineview" redirect="true"/>
+            <forward name="success" path="/FrontendAction.do?action=VendingMachine&amp;pageNo=1" redirect="true"/>
             <!-- 登入失敗重回登入頁面 -->
             <forward name="fail" path="/Login.jsp"/>
         </action>

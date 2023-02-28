@@ -16,6 +16,7 @@ import java.util.Set;
 
 import com.training.action.DBConnectionFactory;
 import com.training.model.Goods;
+import com.training.model.frontendAction;
 
 public class FrontendDao {
 	
@@ -81,7 +82,7 @@ public class FrontendDao {
 		return goods;
 	}
 
-	public Map<BigDecimal, Goods> queryBuyGoods(Set<BigDecimal> goodsIDs) {
+	public Map<BigDecimal, Goods> queryBuyGoods(Set<BigDecimal> goodsIDs) {//ok
 		Map<BigDecimal, Goods> goods = new LinkedHashMap<>();
 
 		for (int i = 0; i < goodsIDs.size(); i++) {
@@ -195,6 +196,55 @@ public class FrontendDao {
 		}
 
 		return updateSuccess;
+	}
+
+	public List<Goods> selectGoods(frontendAction deta, int made, int kara) {
+		List<Goods> Goods = new ArrayList<>();
+		StringBuffer sql = new StringBuffer();
+		ArrayList<Object> list= new ArrayList<Object>();
+		sql.append("SELECT * FROM(SELECT ROWNUM ROW_NUM, S.* FROM ");
+		sql.append(" (SELECT * FROM BEVERAGE_GOODS WHERE GOODS_ID IS NOT NULL");
+		
+		Connection conn = DBConnectionFactory.getOracleDBConnection();
+		try {
+			
+			if(deta.getSearchKeyword()!=null&&!"".equals(deta.getSearchKeyword())){	
+				sql.append(" AND (UPPER(GOODS_NAME) like ? or LOWER(GOODS_NAME) like ?)");
+			list.add("%"+deta.getSearchKeyword()+"%");
+			list.add("%"+deta.getSearchKeyword()+"%");
+			}
+			sql.append(")S)");
+			
+			if(made!=0 && kara!=0){
+			sql.append("WHERE ROW_NUM >= ? AND ROW_NUM < ?");
+			list.add(kara);
+			list.add(made);
+			}
+			
+			Object[]object=list.toArray();
+			PreparedStatement stmt =conn.prepareStatement(sql.toString());
+			
+			for(int i =0;i<object.length;i++){
+				stmt.setObject(i+1, object[i]);
+			}
+			
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				Goods good = new Goods();
+				good.setGoodsID(rs.getString("goods_ID"));
+				good.setGoodsName(rs.getString("goods_Name"));
+				good.setGoodsPrice(rs.getInt("Price"));
+				good.setGoodsQuantity(rs.getInt("Quantity"));
+				good.setGoodsImageName(rs.getString("Image_Name"));
+				good.setStatus(rs.getString("status"));
+				Goods.add(good);
+			}
+			
+		} catch (SQLException e) {
+		
+			e.printStackTrace();
+		}
+		return Goods;
 	}
 
 }

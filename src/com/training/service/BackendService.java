@@ -1,6 +1,5 @@
 package com.training.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,8 +22,8 @@ public class BackendService {
 	private BackendDao bankDao = BackendDao.getInstance();
 
 	public boolean updateGoods(Goods goods) {
-		List<Goods> oracleDatas = bankDao.shohinsagasu(goods);
-		Goods goodsInDB = oracleDatas.get(0);
+		Goods goodsInDB = bankDao.shohinsagasu(goods.getGoodsID());
+//		Goods goodsInDB = oracleDatas.get(0);
 		goodsInDB.setGoodsQuantity(goods.getGoodsQuantity()+goodsInDB.getGoodsQuantity());
 		goodsInDB.setGoodsPrice(goods.getGoodsPrice());
 		goodsInDB.setStatus(goods.getStatus());
@@ -34,14 +33,14 @@ public class BackendService {
 		return updateSuccess;
 	}
 
-	public int createGoods(Goods goods) {
+	public int createGoods(Goods goods) {//ok
 		
 		int goodsID = bankDao.createGoods(goods);
 		return goodsID;
 		
 	}
 
-	public Set<SalesReport> queryOrderBetweenDate(String startdate,
+	public Set<SalesReport> queryOrderBetweenDate(String startdate,//ok
 			String enddate) {
 		while (startdate.indexOf("-")!=-1){
 			startdate=startdate.replace("-", "/");
@@ -56,12 +55,12 @@ public class BackendService {
 		return queryOrderBetweenDate;
 	}
 	//尋找條件內全部商品
-	public List<Goods> getselectall(Select select) {
+	public List<Goods> getselectall(Select select) {//ok
 		List<Goods> oracleDatas = bankDao.selectGoods(select,0,0);
 		return oracleDatas;
 	}
 	//尋找條件內全部商品 10筆指定資料(透過頁數指定)
-	public List<Goods> getselect(Select select) {
+	public List<Goods> getselect(Select select) {//ok
 		int x = select.getPageNo();
 		if(x==0){
 			x=1;

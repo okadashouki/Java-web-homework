@@ -74,8 +74,11 @@ public class LoginAction extends DispatchAction {
     	// 登出請求
     	HttpSession session = request.getSession();
 		session.removeAttribute("account");
+		session.removeAttribute("data");
+		session.removeAttribute("pagetotals");
+		session.invalidate();
 		request.setAttribute("loginMsg", "謝謝您的光臨!");
-    	
+		
     	return mapping.findForward("fail");
     }
 }
