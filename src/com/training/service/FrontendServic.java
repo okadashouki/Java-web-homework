@@ -27,23 +27,6 @@ public class FrontendServic {
 	
 	private static FrontendDao FrontDao = FrontendDao.getInstance();
 
-	public List<Goods> getDataBaseData(int pageNo) {
-		int x = pageNo;
-
-		int made = x * 6 + 1;
-		int kara = made - 6;
-		List<Goods> oracleDatas = FrontDao.searchGoods(made, kara);
-		return oracleDatas;
-	}
-
-	public Set<Goods> getDataBaseData(String searchKeyword, int pageNo) {
-		int x = pageNo;
-		int made = x * 6 + 1;
-		int kara = made - 6;
-		Set<Goods> oracleDatas = FrontDao.searchGoods(searchKeyword, made,
-				kara);
-		return oracleDatas;
-	}
 
 	public int buyGoods(List<String> values, List<String> buyQuantity,//ok
 			int inputMoney) {

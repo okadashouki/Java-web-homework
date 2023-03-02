@@ -29,7 +29,7 @@
         		<forward name="VendingMachine" path="/FrontendAction.do?action=VendingMachineview" redirect="true" />
         		<forward name="VendingMachineview" path="/WEB-INF/Frontend/VendingMachineCart.jsp" />
       			<forward name="clearCartGoods" path="/FrontendAction.do?action=clearCartGoods" redirect="true" />
-        		<forward name="searchgood" path="/WEB-INF/Frontend/VendingMachineCart.jsp" />
+     
         </action>
         
         <action path="/Selectfrom" type="com.training.action.BackendAction" 

@@ -39,28 +39,28 @@ public class FrontendAction extends DispatchAction{
 	
 	
 	
-	 public ActionForward searchGoods(ActionMapping mapping, ActionForm form, 
-	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
-		 FrontendActionform frontendActionform = (FrontendActionform) form;
-		 frontendAction deta = new frontendAction();
-		 BeanUtils.copyProperties(deta, frontendActionform);
-		 String searchKeyword = deta.getSearchKeyword();
-			int pageNo = deta.getPageNo();
-		
-		 if (searchKeyword == null) {
-				List<Goods> datas = frontendServic.getDataBaseData(pageNo);
-				System.out.println("第" + pageNo + "頁");
-				datas.stream().forEach(g -> System.out.println(g));
-			} else {
-				Set<Goods> datas = frontendServic.getDataBaseData(searchKeyword,
-						pageNo);
-				System.out.println("關鍵字搜尋:" + searchKeyword);
-				datas.stream().forEach(g -> System.out.println(g));
-			}
-		 
-		 
-		 return mapping.findForward("searchgood");
-	 }
+//	 public ActionForward searchGoods(ActionMapping mapping, ActionForm form, 
+//	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
+//		 FrontendActionform frontendActionform = (FrontendActionform) form;
+//		 frontendAction deta = new frontendAction();
+//		 BeanUtils.copyProperties(deta, frontendActionform);
+//		 String searchKeyword = deta.getSearchKeyword();
+//			int pageNo = deta.getPageNo();
+//		
+//		 if (searchKeyword == null) {
+//				List<Goods> datas = frontendServic.getDataBaseData(pageNo);
+//				System.out.println("第" + pageNo + "頁");
+//				datas.stream().forEach(g -> System.out.println(g));
+//			} else {
+//				Set<Goods> datas = frontendServic.getDataBaseData(searchKeyword,
+//						pageNo);
+//				System.out.println("關鍵字搜尋:" + searchKeyword);
+//				datas.stream().forEach(g -> System.out.println(g));
+//			}
+//		 
+//		 
+//		 return mapping.findForward("searchgood");
+//	 }
 	 public ActionForward VendingMachine(ActionMapping mapping, ActionForm form, 
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 form=null;
@@ -86,10 +86,14 @@ public class FrontendAction extends DispatchAction{
 		 for(Integer p: pagetotals){
 			 if(deta.getPageNo()==1){
 				 for(int x=1;x<=3;x++)
+					 if(x<=pagetotals.size()){
 				 pages.add(x);
+					 }
 			 }else if(pagetotal == deta.getPageNo()){
 				 for(int x=pagetotal-2;x<=pagetotal;x++){
+					 if(x>=1){
 					 pages.add(x);
+					 }
 				 }
 		 }else if(p == deta.getPageNo()){
 			 for(int x=p;x<p+3;x++){
@@ -281,7 +285,7 @@ public class FrontendAction extends DispatchAction{
 			out.println(cartMsg);
 			out.flush();
 			out.close();
-		 return mapping.findForward("VendingMachine");
+		 return null;
 	 }
 	 
 }

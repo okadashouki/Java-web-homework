@@ -9,7 +9,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,59 +27,7 @@ public class FrontendDao {
 		return frontendDao;
 	}
 
-	public static List<Goods> searchGoods(int made, int kara) {
-		List<Goods> Goodsdatas = new ArrayList<>();
-		String querySQL = "SELECT * FROM (SELECT ROWNUM ROW_NUM, S.* FROM BEVERAGE_GOODS S )";
-		querySQL += "WHERE ROW_NUM >= ? AND ROW_NUM < ?";
-		try (Connection conn = DBConnectionFactory.getOracleDBConnection();
-				PreparedStatement stmt = conn.prepareStatement(querySQL)) {
-			stmt.setInt(1, kara);
-			stmt.setInt(2, made);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				Goods good = new Goods();
-				good.setGoodsID(rs.getString("goods_ID"));
-				good.setGoodsName(rs.getString("goods_Name"));
-				good.setGoodsPrice(rs.getInt("Price"));
-				good.setGoodsQuantity(rs.getInt("Quantity"));
-				good.setGoodsImageName(rs.getString("Image_Name"));
-				good.setStatus(rs.getString("status"));
-				Goodsdatas.add(good);}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}	
-		return Goodsdatas;
-	}
-	
-	
-	public static Set<Goods> searchGoods(String searchKeyword, int made,
-			int kara) {
-		Set<Goods> goods = new LinkedHashSet<>();
-		String querySQL = "SELECT * FROM (SELECT ROWNUM ROW_NUM, S.* FROM BEVERAGE_GOODS S ";
-		querySQL += " WHERE UPPER(GOODS_NAME) like ? or LOWER(GOODS_NAME) like ?) ";
-		querySQL += " WHERE ROW_NUM >= ? AND ROW_NUM < ?";
-		try (Connection conn = DBConnectionFactory.getOracleDBConnection()){
-				PreparedStatement stmt = conn.prepareStatement(querySQL);
-			stmt.setString(1, "%" + searchKeyword + "%");
-			stmt.setString(2, "%" + searchKeyword + "%");
-			stmt.setInt(3, kara);
-			stmt.setInt(4, made);
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				Goods good = new Goods();
-				good.setGoodsID(rs.getString("goods_ID"));
-				good.setGoodsName(rs.getString("goods_Name"));
-				good.setGoodsPrice(rs.getInt("Price"));
-				good.setGoodsQuantity(rs.getInt("Quantity"));
-				good.setGoodsImageName(rs.getString("Image_Name"));
-				good.setStatus(rs.getString("status"));
-				goods.add(good);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return goods;
-	}
+
 
 	public Map<BigDecimal, Goods> queryBuyGoods(Set<BigDecimal> goodsIDs) {//ok
 		Map<BigDecimal, Goods> goods = new LinkedHashMap<>();

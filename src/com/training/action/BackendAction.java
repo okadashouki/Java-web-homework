@@ -1,5 +1,6 @@
 package com.training.action;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -107,9 +108,17 @@ public class BackendAction extends DispatchAction {
 			throws Exception {
 		BackendActionform backendActionform = (BackendActionform) form;
 		FormFile Imagename = backendActionform.getGoodsImage();
+		String goodsImgPath =servlet.getInitParameter("GoodsImgPath");
+		String serverGoodsImgPath = servlet.getServletContext().getRealPath(goodsImgPath);
 		String fileName = Imagename.getFileName();
+		
 		HttpSession session = request.getSession();
-//		 response.sendRedirect("DrinksImage/" + fileName);
+		FileOutputStream fileOutput = new FileOutputStream(
+				serverGoodsImgPath +"/"+ Imagename.getFileName()); 
+		fileOutput.write(Imagename.getFileData()); 
+        fileOutput.flush(); 
+        fileOutput.close(); 
+        Imagename.destroy() ;  // destroy temperaty file
 		Goods goods = new Goods();
 		BeanUtils.copyProperties(goods, backendActionform);
 		goods.setGoodsImageName(fileName);
