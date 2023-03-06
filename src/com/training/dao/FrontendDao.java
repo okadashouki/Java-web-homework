@@ -51,6 +51,13 @@ public class FrontendDao {
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
+				}finally{
+					try {
+						conn.close();
+					} catch (SQLException e) {
+					
+						e.printStackTrace();
+					}
 				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
@@ -84,8 +91,14 @@ public class FrontendDao {
 				} catch (SQLException e) {
 					conn.rollback();
 					throw e;
+				}finally{
+					try {
+						conn.close();
+					} catch (SQLException e) {
+					
+						e.printStackTrace();
+					}
 				}
-
 			}
 			int[] insertCount = pstmt.executeBatch();
 			for (int s : insertCount) {
@@ -136,12 +149,17 @@ public class FrontendDao {
 			} catch (SQLException e) {
 				conn.rollback();
 				throw e;
+			}finally{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				
+					e.printStackTrace();
+				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return updateSuccess;
 	}
 
@@ -190,6 +208,13 @@ public class FrontendDao {
 		} catch (SQLException e) {
 		
 			e.printStackTrace();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+			
+				e.printStackTrace();
+			}
 		}
 		return Goods;
 	}

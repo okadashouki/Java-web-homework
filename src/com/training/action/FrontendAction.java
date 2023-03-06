@@ -37,30 +37,7 @@ public class FrontendAction extends DispatchAction{
 
 	private FrontendServic frontendServic = FrontendServic.getInstance();
 	
-	
-	
-//	 public ActionForward searchGoods(ActionMapping mapping, ActionForm form, 
-//	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
-//		 FrontendActionform frontendActionform = (FrontendActionform) form;
-//		 frontendAction deta = new frontendAction();
-//		 BeanUtils.copyProperties(deta, frontendActionform);
-//		 String searchKeyword = deta.getSearchKeyword();
-//			int pageNo = deta.getPageNo();
-//		
-//		 if (searchKeyword == null) {
-//				List<Goods> datas = frontendServic.getDataBaseData(pageNo);
-//				System.out.println("第" + pageNo + "頁");
-//				datas.stream().forEach(g -> System.out.println(g));
-//			} else {
-//				Set<Goods> datas = frontendServic.getDataBaseData(searchKeyword,
-//						pageNo);
-//				System.out.println("關鍵字搜尋:" + searchKeyword);
-//				datas.stream().forEach(g -> System.out.println(g));
-//			}
-//		 
-//		 
-//		 return mapping.findForward("searchgood");
-//	 }
+
 	 public ActionForward VendingMachine(ActionMapping mapping, ActionForm form, 
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 form=null;
@@ -71,6 +48,7 @@ public class FrontendAction extends DispatchAction{
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
 		 FrontendActionform frontendActionform = (FrontendActionform) form;
 		 frontendAction deta = new frontendAction();
+		 String urlMsg = null;
 		 BeanUtils.copyProperties(deta, frontendActionform);;
 		 List<Goods> datas = frontendServic.getAllgood(deta);//取得全部商品資訊
 		 List<Goods> goods=frontendServic.getgood(deta);

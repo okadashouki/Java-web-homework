@@ -32,8 +32,8 @@ public class BackendDao {
 	public static Goods shohinsagasu(String id) {
 		Goods good = new Goods();
 		String querySQL = "SELECT * FROM BEVERAGE_GOODS WHERE goods_ID=?";
-		try(Connection conn = DBConnectionFactory.getOracleDBConnection();
-				PreparedStatement stmt = conn.prepareStatement(querySQL)){
+		Connection conn = DBConnectionFactory.getOracleDBConnection();
+		try(PreparedStatement stmt = conn.prepareStatement(querySQL)){
 			stmt.setString(1,id);
 				ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -47,6 +47,13 @@ public class BackendDao {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+			
+				e.printStackTrace();
+			}
 		}
 		return good;
 	}
@@ -108,6 +115,13 @@ public class BackendDao {
 			} catch (SQLException e) {
 				conn.rollback();
 				throw e;
+			}finally{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				
+					e.printStackTrace();
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -128,8 +142,8 @@ public class BackendDao {
 		querySQL += " SELECT ORDER_ID,CUSTOMER_NAME,ORDER_DATE,GOODS_NAME,GOODS_BUY_PRICE,";
 		querySQL += " BUY_QUANTITY,buyAmount FROM G";
 		querySQL += " WHERE ORDER_DATE BETWEEN ? AND ? ORDER BY ORDER_ID";
-		try (Connection conn = DBConnectionFactory.getOracleDBConnection();
-				PreparedStatement stmt = conn.prepareStatement(querySQL)) {
+		Connection conn = DBConnectionFactory.getOracleDBConnection();
+		try (PreparedStatement stmt = conn.prepareStatement(querySQL)) {
 
 			stmt.setDate(1, new Date(parseDate(startdate).getTime()));
 			stmt.setDate(2, new Date(parseDate2(enddate).getTime() + 24
@@ -151,6 +165,13 @@ public class BackendDao {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+			
+				e.printStackTrace();
+			}
 		}
 		return reports;
 	}
@@ -254,6 +275,13 @@ public class BackendDao {
 		} catch (SQLException e) {
 		
 			e.printStackTrace();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+			
+				e.printStackTrace();
+			}
 		}
 		return Goods;
 	}
@@ -263,8 +291,8 @@ public class BackendDao {
 		List<Goods> Goods = new ArrayList<>();
 
 		String querySQL = "SELECT * FROM BEVERAGE_GOODS";
-		try(Connection conn = DBConnectionFactory.getOracleDBConnection();
-				Statement stmt = conn.createStatement();
+		Connection conn = DBConnectionFactory.getOracleDBConnection();
+		try(Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(querySQL)){
 			while (rs.next()) {
 				Goods good = new Goods();
@@ -278,6 +306,13 @@ public class BackendDao {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				conn.close();
+			} catch (SQLException e) {
+			
+				e.printStackTrace();
+			}
 		}
 		return Goods;
 	}

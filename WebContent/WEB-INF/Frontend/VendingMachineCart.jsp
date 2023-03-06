@@ -187,19 +187,24 @@
 				<c:if test="${pagetotals.size()!=1}">
    	
    	<c:if test="${deta.pageNo>1}">
-	<h3 class="page"> <a href="FrontendAction.do?pageNo=${deta.pageNo-1}&amp;action=VendingMachineview&amp;searchKeyword=${deta.searchKeyword}&amp;"> 上一頁 </a> </h3>
+	<h3 class="page"> <a href="FrontendAction.do?action=VendingMachineview&amp;pageNo=${deta.pageNo-1}
+	<c:if test="${not empty deta.searchKeyword}">&amp;searchKeyword=${deta.searchKeyword}</c:if>
+	&amp;method=get"> 上一頁 </a> </h3>
 	</c:if>
 	
 	<c:forEach items ="${pages}" var="page">
 	<h3 class="page">
-		<a href="FrontendAction.do?pageNo=${page}&amp;
-		action=VendingMachineview&amp;searchKeyword=${deta.searchKeyword}&amp;"<c:if test="${deta.pageNo == page}">style="color:red;"</c:if>>${page}</a> 
+		<a href="FrontendAction.do?action=VendingMachineview&amp;pageNo=${page}
+			<c:if test="${not empty deta.searchKeyword}">&amp;searchKeyword=${deta.searchKeyword}</c:if>
+		&amp;method=get"<c:if test="${deta.pageNo == page}">style="color:red;"</c:if>>${page}</a> 
 	</h3>
 	</c:forEach>
 	
 	
 	<c:if test="${deta.pageNo != pagetotals.size() &&pagetotals.size()!=0}">
-	<h3 class="page"> <a href="FrontendAction.do?pageNo=${deta.pageNo+1}&amp;action=VendingMachineview&amp;searchKeyword=${deta.searchKeyword}&amp;"> 下一頁 </a> </h3>
+	<h3 class="page"> <a href="FrontendAction.do?action=VendingMachineview&amp;pageNo=${deta.pageNo+1}
+	<c:if test="${not empty deta.searchKeyword}">&amp;searchKeyword=${deta.searchKeyword}</c:if>
+	&amp;method=get"> 下一頁 </a> </h3>
 	</c:if>
 	
 	

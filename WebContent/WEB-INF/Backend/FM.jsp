@@ -17,7 +17,7 @@
 				<a href="BackendAction.do?action=querySalesReportview">銷售報表</a>
 			</td>
 			<td width="200" height="50" align="center">
-				<a href="FrontendAction.do?action=VendingMachine&amp;pageNo=1">回販賣機</a>
+				<a href="FrontendAction.do?action=VendingMachine&amp;pageNo=1&amp;searchKeyword=">回販賣機</a>
 			</td>
 		</tr>
 </table>

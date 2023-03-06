@@ -21,6 +21,9 @@
 <%@ include file="FM.jsp" %>
 	<br/><br/><HR>	
 	<h2>銷售報表</h2><br/>
+	<c:if test="${not empty requestScope.dateMsg}">
+		系統回應：<p style="color:blue;">${requestScope.dateMsg}</p>
+	</c:if>
 	<div style="margin-left:25px;">
 	<form action="BackendAction.do" method="get">
 		<input type="hidden" name="action" value="querySalesReport"/>

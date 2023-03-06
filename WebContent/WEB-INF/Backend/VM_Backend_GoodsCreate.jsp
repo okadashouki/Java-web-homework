@@ -19,6 +19,9 @@
 	<form action="BackendAction.do?action=addGoods" enctype="multipart/form-data" method="post">
 	<p style="color:blue;">${sessionScope.addGoodsMsg}</p>
 	<% session.removeAttribute("addGoodsMsg"); %>
+	<c:if test="${not empty requestScope.addGoodMsg}">
+		系統回應：<p style="color:blue;">${requestScope.addGoodMsg}</p>
+	</c:if>
 		<p>
 			飲料名稱：
 			<input type="text" name="goodsName" size="10"/>

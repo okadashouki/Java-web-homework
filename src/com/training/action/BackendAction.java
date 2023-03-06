@@ -111,6 +111,13 @@ public class BackendAction extends DispatchAction {
 		String goodsImgPath =servlet.getInitParameter("GoodsImgPath");
 		String serverGoodsImgPath = servlet.getServletContext().getRealPath(goodsImgPath);
 		String fileName = Imagename.getFileName();
+		String addGoodMsg = null;
+		if("".equals(backendActionform.getGoodsName())|| backendActionform.getGoodsImage()==null
+				||backendActionform.getGoodsPrice()==0||backendActionform.getGoodsQuantity()==0){
+			addGoodMsg = "資料輸入不完整!!";
+			request.setAttribute("addGoodMsg", addGoodMsg);
+			return mapping.findForward("addGoodsview");
+		}
 		
 		HttpSession session = request.getSession();
 		FileOutputStream fileOutput = new FileOutputStream(
@@ -143,8 +150,13 @@ public class BackendAction extends DispatchAction {
 			HttpServletResponse response) throws Exception {
 		String startdate = request.getParameter("queryStartDate");
 		String enddate = request.getParameter("queryEndDate");
+		String dateMsg=null;
 		HttpSession session = request.getSession();
-
+if("".equals(startdate)||"".equals(enddate)){
+	dateMsg="日期不能空白!!";
+	request.setAttribute("dateMsg", dateMsg);
+	return mapping.findForward("querySalesReportview");
+}
 		Set<SalesReport> reports = backendService.queryOrderBetweenDate(
 				startdate, enddate);
 		session.setAttribute("reports", reports);

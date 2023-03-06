@@ -37,8 +37,8 @@ public class LoginCheckFilter implements Filter {
             	chain.doFilter(request,response);
             	
             } else {
-                // 不是登入驗證的請求或是SessionTimeOut,轉向到 "/login.html" 要求重新登入.            	
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/BankLogin.html");
+                // 不是登入驗證的請求或是SessionTimeOut,轉向到 "/Login.jsp" 要求重新登入.            	
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/Login.jsp");
                 dispatcher.forward(request,response);
             }            
         }
