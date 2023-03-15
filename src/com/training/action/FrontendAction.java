@@ -1,8 +1,10 @@
 package com.training.action;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -43,6 +46,26 @@ public class FrontendAction extends DispatchAction{
 		 form=null;
 		 return mapping.findForward("VendingMachine");
 	 }
+	 public ActionForward CartGoodsview(ActionMapping mapping, ActionForm form, 
+	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
+		 HttpSession session = request.getSession();
+		 Map<Goods, Integer> carGoods = (Map<Goods, Integer>) session.getAttribute("carGoods");
+		 if (carGoods != null) {
+		     Set<Goods> keys = carGoods.keySet();
+		     for (Iterator<Goods> i = keys.iterator(); i.hasNext();) {
+		         Goods key = i.next();
+		         Goods updatedGoods = frontendServic.good(key.getGoodsID()); // 取得要更改的商品
+		         if (updatedGoods != null) {
+		           
+		             key.setGoodsQuantity(updatedGoods.getGoodsQuantity());
+		         }
+		     }
+		 }
+
+		 
+		 return mapping.findForward("CartGoodsview");
+	 }
+	 
 	 //刷新商品頁面
 	 public ActionForward VendingMachineview(ActionMapping mapping, ActionForm form, //ok
 	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
@@ -131,6 +154,8 @@ public class FrontendAction extends DispatchAction{
 				buyGoodsMsg.add("購買金額:" + goodstotal+"\r\n");
 				buyGoodsMsg.add("找零金額:" + buygood.getInputMoney());
 				buyGoodsMsg.add("----購買失敗----");
+				session.setAttribute("buyGoodsMsg", buyGoodsMsg);
+				return mapping.findForward("CartGoodsview");
 			} else {
 				int x = buygood.getInputMoney();
 				//key商品 vaule購買數量
@@ -167,8 +192,8 @@ public class FrontendAction extends DispatchAction{
 				 session.removeAttribute("carGoods");
 				return mapping.findForward("VendingMachine");
 			}
-		 session.setAttribute("buyGoodsMsg", buyGoodsMsg);
-		 return mapping.findForward("VendingMachine");
+//		 session.setAttribute("buyGoodsMsg", buyGoodsMsg);
+//		 return mapping.findForward("VendingMachine");
 	 }
 		
 	 public ActionForward addCartGoods(ActionMapping mapping, ActionForm form, 
@@ -265,5 +290,96 @@ public class FrontendAction extends DispatchAction{
 			out.close();
 		 return null;
 	 }
+	 public ActionForward removeItem(ActionMapping mapping, ActionForm form, 
+	          HttpServletRequest request, HttpServletResponse response)  throws Exception{
+		 
+		 // 從請求中取得要刪除的商品 ID
+		    String goodsId = (request.getParameter("goodsID"));
+		    
+		    // 從 session 中取得購物車
+		    Map<Goods, Integer> carGoods = (Map<Goods, Integer>) request.getSession().getAttribute("carGoods");
+		    
+		    // 從購物車中移除該商品
+		    Iterator<Map.Entry<Goods, Integer>> iterator = carGoods.entrySet().iterator();
+		    while (iterator.hasNext()) {
+		        Map.Entry<Goods, Integer> entry = iterator.next();
+		        if (entry.getKey().getGoodsID().equals(goodsId)) {
+		            iterator.remove();
+		            break;
+		        }
+		    }
+		    
+		    // 將更新後的購物車放回 session
+		    request.getSession().setAttribute("carGoods", carGoods);
+		    
+		    // 重新導向到顯示購物車的頁面
+		 
+		 return mapping.findForward("CartGoodsview");
+	 }
 	 
+	 /**
+	  * 更新購物車中某一商品的數量
+	  * 從request中取得商品ID及新數量
+	  * 從session中取得購物車清單(Map<Goods, Integer>)及目前總金額(int)
+	  * 在購物車清單中找到對應的商品，更新數量
+	  * 重新計算購物車中每件商品的小計及總金額
+	  * 更新session中的購物車清單及目前總金額
+	  * 跳轉到cart.jsp
+	  *
+	  
+	  */
+	 public ActionForward updateItem(ActionMapping mapping, ActionForm form,
+	            HttpServletRequest request, HttpServletResponse response) throws Exception {
+		 FrontendActionform frontendActionform = (FrontendActionform) form;
+		 buygoodaction buygood = new buygoodaction();
+		 BeanUtils.copyProperties(buygood, frontendActionform);
+	     // 從request中取得商品ID及新數量
+		 String goodsId = request.getParameter("goodsId");
+	     int quantity = Integer.parseInt(request.getParameter("newQuantity"));
+	     // 從session中取得購物車清單(Map<Goods, Integer>)及目前總金額(int)
+	     HttpSession session = request.getSession();
+	     Map<Goods, Integer> carGoods = (Map<Goods, Integer>) session.getAttribute("carGoods");
+	     // 在購物車清單中找到對應的商品，更新數量
+	     for (Goods goods : carGoods.keySet()) {
+	         if (goods.getGoodsID().equals(goodsId)) {
+	             carGoods.put(goods, quantity);
+	             break;
+	         }
+	     }
+	     // 重新計算購物車中每件商品的小計及總金額
+	     int total = 0;
+	     for (Map.Entry<Goods, Integer> entry : carGoods.entrySet()) {
+	         Goods goods = entry.getKey();
+	         int quantityInCart = entry.getValue();
+	         int subTotal = goods.getGoodsPrice() * quantityInCart;
+	         total += subTotal;
+	     }
+	     // 更新session中的購物車清單及目前總金額
+	     session.setAttribute("carGoods", carGoods);
+	     session.setAttribute("total", total);
+	     List<Map<String, Object>> carGoodsList = new ArrayList<>();
+	     
+	     for (Map.Entry<Goods, Integer> entry : carGoods.entrySet()) {
+	         Goods goods = entry.getKey();
+	         int quantityInCart = entry.getValue();
+	         Map<String, Object> map = new HashMap<>();
+	         map.put("goodsID", goods.getGoodsID());
+	         map.put("goodsName", goods.getGoodsName());
+	         map.put("goodsPrice", goods.getGoodsPrice());
+	         map.put("quantity", quantityInCart);
+	         map.put("subTotal", String.valueOf(goods.getGoodsPrice() * quantityInCart));
+	         carGoodsList.add(map);
+	     }
+//	     JSONArray carGoodsJsonArray = JSONArray.fromObject(carGoodsList);
+	  
+	     response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json");
+			PrintWriter out = response.getWriter();
+			out.println(JSONArray.fromObject(carGoodsList));
+
+			out.flush();
+			out.close();
+			 form=null;
+			return null;
+	 }
 }

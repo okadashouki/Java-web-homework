@@ -28,6 +28,7 @@
         		parameter="action" name="FrontendActionform">
         		<forward name="VendingMachine" path="/FrontendAction.do?action=VendingMachineview" redirect="true" />
         		<forward name="VendingMachineview" path="/WEB-INF/Frontend/VendingMachineCart.jsp" />
+      			<forward name="CartGoodsview" path="/WEB-INF/Frontend/Cargood.jsp" />
       			<forward name="clearCartGoods" path="/FrontendAction.do?action=clearCartGoods" redirect="true" />
      
         </action>

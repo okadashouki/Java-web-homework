@@ -91,13 +91,6 @@ public class FrontendDao {
 				} catch (SQLException e) {
 					conn.rollback();
 					throw e;
-				}finally{
-					try {
-						conn.close();
-					} catch (SQLException e) {
-					
-						e.printStackTrace();
-					}
 				}
 			}
 			int[] insertCount = pstmt.executeBatch();
@@ -218,5 +211,41 @@ public class FrontendDao {
 		}
 		return Goods;
 	}
+
+	public Goods good(String goodsID) {
+		String querySQL = "SELECT * FROM BEVERAGE_GOODS WHERE GOODS_ID =?";
+		String x =  goodsID;
+		Goods good = new Goods();
+		try (Connection conn = DBConnectionFactory.getOracleDBConnection();
+				PreparedStatement stmt = conn.prepareStatement(querySQL)) {
+			stmt.setString(1, x);
+		
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					
+					good.setGoodsID(rs.getString("goods_ID"));
+					good.setGoodsName(rs.getString("goods_Name"));
+					good.setGoodsPrice(rs.getInt("Price"));
+					good.setGoodsQuantity(rs.getInt("Quantity"));
+					good.setGoodsImageName(rs.getString("Image_Name"));
+					good.setStatus(rs.getString("status"));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally{
+				try {
+					conn.close();
+				} catch (SQLException e) {
+				
+					e.printStackTrace();
+				}
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	
+	return good;	
+}
+
 
 }

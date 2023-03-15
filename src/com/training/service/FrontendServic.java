@@ -63,7 +63,7 @@ public class FrontendServic {
 					BigDecimal key = i.next();
 					Goods value = buyGoods.get(key);
 					Integer GoodsQuantity=value.getGoodsQuantity();
-					if(GoodsQuantity>Integer.parseInt(buyQuantity.get(x))){ //庫存>購買
+					if(GoodsQuantity>=Integer.parseInt(buyQuantity.get(x))){ //庫存>購買
 					goodsOrders.put(value,Integer.parseInt(buyQuantity.get(x)));//還要扣庫存
 					
 					}else if(GoodsQuantity<Integer.parseInt(buyQuantity.get(x))&&value.getGoodsQuantity()!=0){ //庫存小於購買,且庫存不等於0
@@ -124,6 +124,11 @@ public class FrontendServic {
 		int kara = made - 6;
 		List<Goods> oracleDatas =FrontDao.selectGoods(deta,made,kara);
 		return oracleDatas;
+	}
+
+	public Goods good(String goodsID) {
+		
+		return FrontDao.good(goodsID);
 	}
 	
 

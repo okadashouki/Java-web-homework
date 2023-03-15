@@ -8,6 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>販賣機</title>
 <style type="text/css">
+
 		.page {
 			display:inline-block;
 			padding-left: 10px;
@@ -34,21 +35,21 @@
 				};
 			}
 		}
-		function queryCartGoods(){
-			const formData = new FormData();
-			formData.append('action', 'queryCartGoods');
-			// 送出查詢購物車商品請求
-			const request = new XMLHttpRequest();
-			request.open("POST", "FrontendAction.do");			
-			request.send(formData);
-			request.onreadystatechange = function(){
-				if (this.readyState == 4 && this.status == 200){
-					var response = request.responseText;
-					var responseJson = JSON.parse(response);
-					alert(JSON.stringify(responseJson, null, 3));
-				};
-			}
-		}
+// 		function queryCartGoods(){
+// 			const formData = new FormData();
+// 			formData.append('action', 'queryCartGoods');
+// 			// 送出查詢購物車商品請求
+// 			const request = new XMLHttpRequest();
+// 			request.open("POST", "FrontendAction.do");			
+// 			request.send(formData);
+// 			request.onreadystatechange = function(){
+// 				if (this.readyState == 4 && this.status == 200){
+// 					var response = request.responseText;
+// 					var responseJson = JSON.parse(response);
+// 					alert(JSON.stringify(responseJson, null, 3));
+// 				};
+// 			}
+// 		}
 		function clearCartGoods(){
 			const formData = new FormData();
 			formData.append('action', 'clearCartGoods');
@@ -64,6 +65,7 @@
 				};
 			}
 		}
+	
 	</script>
 </head>
 <body>
@@ -71,7 +73,8 @@
 <table width="1000" height="400" align="center">
 	<tr>
 		<td colspan="2" align="right">
-			<button onclick="queryCartGoods()">購物車商品列表</button>
+<!-- 			<button onclick="CartGoodsview()">購物車商品列表</button> -->
+	<a href="FrontendAction.do?action=CartGoodsview" align="left">購物車商品列表</a>
 			<button onclick="clearCartGoods()">清空購物車</button>			
 		</td>
 	</tr>
@@ -92,16 +95,7 @@
 			<a href="BackendAction.do?action=Backend" align="left" >後臺頁面</a>&nbsp; &nbsp;
 			<a href="LoginAction.do?action=logout" align="left">登出</a>
 			<br/><br/>
-			<form action="FrontendAction.do" method="post">
-				<input type="hidden" name="action" value="buyGoods"/>				
-				<font face="微軟正黑體" size="4" >
-					<b>投入:</b>
-					<input type="number" name="inputMoney" max="100000" min="0"  size="5" value="0">
-					<b>元</b>		
-					<b><input type="submit" value="送出">					
-					<br/><br/>
-				</font>
-			</form>
+			
 			<c:if test="${not empty buyGoodsMsg}">
 			
 			<div style="border-width:3px;border-style:dashed;border-color:#FFAC55;
