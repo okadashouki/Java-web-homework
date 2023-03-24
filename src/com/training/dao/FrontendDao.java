@@ -195,6 +195,7 @@ public class FrontendDao {
 				good.setGoodsQuantity(rs.getInt("Quantity"));
 				good.setGoodsImageName(rs.getString("Image_Name"));
 				good.setStatus(rs.getString("status"));
+				good.setDESCRIPTIO(rs.getString("DESCRIPTION"));
 				Goods.add(good);
 			}
 			
