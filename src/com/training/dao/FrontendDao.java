@@ -67,9 +67,9 @@ public class FrontendDao {
 	}
 
 	public boolean batchCreateGoodsOrder(String customerID,
-			Map<Goods, Integer> kazu) {
+			Map<Goods, Integer> carGoods) {
 		java.util.Date utilDate = new java.util.Date();
-		Set<Goods> keys = kazu.keySet();
+		Set<Goods> keys = carGoods.keySet();
 		boolean insertSuccess = false;
 
 		String insertSQL = "INSERT INTO BEVERAGE_ORDER(ORDER_ID,ORDER_DATE,CUSTOMER_ID,GOODS_ID,GOODS_BUY_PRICE,BUY_QUANTITY)";
@@ -78,7 +78,7 @@ public class FrontendDao {
 				PreparedStatement pstmt = conn.prepareStatement(insertSQL)) {
 			for (Iterator<Goods> i = keys.iterator(); i.hasNext();) {
 				Goods key = i.next();
-				Integer value = kazu.get(key);
+				Integer value = carGoods.get(key);
 				try {
 
 					pstmt.setTimestamp(1, new Timestamp(utilDate.getTime()));

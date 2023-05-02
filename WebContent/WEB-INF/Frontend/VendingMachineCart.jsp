@@ -15,6 +15,23 @@
 .product-description {
 	pointer-events: none;
 }
+.message-box {
+  position: fixed;
+  top: 50px; /* 距離上方50px */
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 20px;
+  background-color: #333;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 24px; /* 放大字體 */
+  animation: fadeOut 2s forwards; /* 淡出動畫 */
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
 
 .page {
 	display: inline-block;
@@ -111,43 +128,71 @@ $(document).ready(function() {
 	  });
 	}); 
 
-
-		function addCartGoods(goodsID, buyQuantityIdx){
-			console.log("goodsID:", goodsID);			
-			var buyQuantity = document.getElementsByName("buyQuantity")[buyQuantityIdx].value;
-			console.log("buyQuantity:", buyQuantity);
-			const formData = new FormData();
-			formData.append('action', 'addCartGoods');
-			formData.append('goodsID', goodsID);
-			formData.append('buyQuantity', buyQuantity);
-			// 送出商品加入購物車請求
-			const request = new XMLHttpRequest();
-			request.open("POST", "FrontendAction.do");			
-			request.send(formData);
-			request.onreadystatechange = function(){
-				if (this.readyState == 4 && this.status == 200){
-					var response = request.responseText;
-					var responseJson = JSON.parse(response);
-					alert(JSON.stringify(responseJson, null, 3));
-				};
-			}
-		}
+function addCartGoods(goodsID, buyQuantityIdx){
+	  var buyQuantity = document.getElementsByName("buyQuantity")[buyQuantityIdx].value;
+	  const formData = new FormData();
+	  formData.append('action', 'addCartGoods');
+	  formData.append('goodsID', goodsID);
+	  formData.append('buyQuantity', buyQuantity);
+	  // 送出商品加入購物車請求
+	  const request = new XMLHttpRequest();
+	  request.open("POST", "FrontendAction.do");      
+	  request.send(formData);
+	  request.onreadystatechange = function(){
+	    if (this.readyState == 4 && this.status == 200){
+	      var response = request.responseText;
+	      var responseJson = JSON.parse(response);
+	      /*
+	      創建一個新的 HTML 元素 div，
+	      並加上 message-box 這個 class，
+	      設定元素內的文字為 responseJson[0]，
+	      也就是伺服器回傳的訊息中的第一個元素，然後將這個元素加到 HTML文件的 body元素中。
+	      接著，透過 setTimeout 函式，
+	      設定 1 秒後再執行移除這個元素的動作，
+	      也就是將這個元素從 body 中刪除，達到訊息顯示後自動消失的效果
+	      */
+	      
+	      var messageBox = document.createElement("div");
+	      messageBox.classList.add("message-box");
+	      messageBox.innerText = responseJson[0];
+	      document.body.appendChild(messageBox);
+	      messageBox.style.animation = "fadeInOut 1s forwards";
+	      setTimeout(function() {
+	        messageBox.style.animation = "fadeOut 1s forwards";
+	        setTimeout(function() {
+	          messageBox.remove();
+	        }, 1000);
+	      }, 1000);
+	    };
+	  }
+	}
 
 		function clearCartGoods(){
-			const formData = new FormData();
-			formData.append('action', 'clearCartGoods');
-			// 送出清空購物車商品請求
-			const request = new XMLHttpRequest();
-			request.open("POST", "FrontendAction.do");			
-			request.send(formData);	
-			request.onreadystatechange = function(){
-				if (this.readyState == 4 && this.status == 200){
-					var response = request.responseText;
-					var responseJson = JSON.parse(response);
-					alert(JSON.stringify(responseJson, null, 3));
-				};
+			  const formData = new FormData();
+			  formData.append('action', 'clearCartGoods');
+			  // 送出清空購物車商品請求
+			  const request = new XMLHttpRequest();
+			  request.open("POST", "FrontendAction.do");
+			  request.send(formData);
+			  request.onreadystatechange = function(){
+			    if (this.readyState == 4 && this.status == 200){
+			      var response = request.responseText;
+			      var messageBox = document.createElement("div");
+			      messageBox.classList.add("message-box");
+			      messageBox.innerText = "已清除購物車";
+			      document.body.appendChild(messageBox);
+			      messageBox.style.animation = "fadeInOut 1s forwards";
+			      setTimeout(function() {
+			        messageBox.style.animation = "fadeOut 1s forwards";
+			        setTimeout(function() {
+			          messageBox.remove();
+			        }, 1000);
+			      }, 1000);
+			    };
+			  }
 			}
-		}
+
+
 	
 	</script>
 </head>
@@ -156,7 +201,7 @@ $(document).ready(function() {
 	<table width="1000" height="400" align="center">
 		<tr>
 			<td colspan="2" align="right">
-				<!-- 			<button onclick="CartGoodsview()">購物車商品列表</button> --> <a
+				 <a
 				href="FrontendAction.do?action=CartGoodsview" align="left">購物車商品列表</a>
 				<button onclick="clearCartGoods()">清空購物車</button>
 			</td>
