@@ -1,1 +1,1 @@
-# JavaEE_Homework
+# 模擬購物網站
